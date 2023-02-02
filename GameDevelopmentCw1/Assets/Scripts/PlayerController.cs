@@ -4,6 +4,7 @@
 
     public class PlayerController : MonoBehaviour
     {
+        public LayerMask SolidObjectsLayer; 
     public float moveSpeed;
 private Animator animator;
     private bool isMoving;
@@ -30,7 +31,10 @@ input.x=Input.GetAxisRaw("Horizontal");
         TargetPosition.x+=input.x;
         TargetPosition.y+=input.y;
 
-        StartCoroutine(Move(TargetPosition));
+        if(isWalkable(TargetPosition)){
+StartCoroutine(Move(TargetPosition));
+        }
+        
     }
         }
     animator.SetBool("isMoving", isMoving);
@@ -47,6 +51,13 @@ input.x=Input.GetAxisRaw("Horizontal");
         }
         transform.position=TargetPosition;
         isMoving=false;
+    }
+
+    private bool isWalkable(Vector3 TargetPosition){
+     if(Physics2D.OverlapCircle(TargetPosition,0.2f,SolidObjectsLayer)!=null){
+        return false;
+     }
+     return true;
     }
 
     }
