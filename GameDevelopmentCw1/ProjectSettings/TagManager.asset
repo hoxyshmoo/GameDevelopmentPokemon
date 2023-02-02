@@ -13,8 +13,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - SolidObjects
+  - LongGrass
   - 
   - 
   - 
@@ -50,6 +50,6 @@ TagManager:
   - name: PlayerLayer
     uniqueID: 1189862685
     locked: 0
-  - name: SolidLayer
+  - name: ForegroundLayer
     uniqueID: 427728379
     locked: 0
