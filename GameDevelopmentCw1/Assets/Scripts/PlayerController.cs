@@ -5,6 +5,7 @@
     public class PlayerController : MonoBehaviour
     {
         public LayerMask SolidObjectsLayer; 
+                public LayerMask grassEncounterLayer; 
     public float moveSpeed;
 private Animator animator;
     private bool isMoving;
@@ -51,13 +52,23 @@ StartCoroutine(Move(TargetPosition));
         }
         transform.position=TargetPosition;
         isMoving=false;
+
+        CheckForEncounters();
     }
 
     private bool isWalkable(Vector3 TargetPosition){
-     if(Physics2D.OverlapCircle(TargetPosition,0.2f,SolidObjectsLayer)!=null){
+     if(Physics2D.OverlapCircle(TargetPosition,0.2f,SolidObjectsLayer)!=null){  
         return false;
      }
      return true;
+    }
+
+    private void CheckForEncounters(){
+        if(Physics2D.OverlapCircle(transform.position,0.2f,grassEncounterLayer)!=null){
+            if(Random.Range(1,101)<=10){
+Debug.Log("Show Encounter");
+            }
+        }
     }
 
     }
