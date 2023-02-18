@@ -1,6 +1,7 @@
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+using System;    
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
     public class PlayerController : MonoBehaviour
     {
@@ -10,12 +11,14 @@
 private Animator animator;
     private bool isMoving;
     private Vector2 input;
-
+    // when battle is started
+    public event Action OnEncountered;
+    
     private void Awake(){
         animator=GetComponent<Animator>(); 
     }
 
-    private void Update(){
+    public void HandelUpdate(){
         if(!isMoving){
 input.x=Input.GetAxisRaw("Horizontal");
     input.y=Input.GetAxisRaw("Vertical");
@@ -64,9 +67,12 @@ StartCoroutine(Move(TargetPosition));
     }
 
     private void CheckForEncounters(){
+        
         if(Physics2D.OverlapCircle(transform.position,0.2f,grassEncounterLayer)!=null){
-            if(Random.Range(1,101)<=10){
-Debug.Log("Show Encounter");
+            if(UnityEngine.Random.Range(1,101)<=10){
+                //Debug.Log("Show Encounter");
+                animator.SetBool("isMoving", false);
+                OnEncountered();
             }
         }
     }
