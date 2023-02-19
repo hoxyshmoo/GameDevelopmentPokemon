@@ -10,14 +10,16 @@ using UnityEngine;
      public LayerMask interactableLayer; 
 
     public float moveSpeed;
-    private Animator animator;
+    //private Animator animator; //Original Unity Animator
+    private CharacterAnimator animator; //New Unity Animator
     private bool isMoving;
     private Vector2 input;
     // when battle is started
     public event Action OnEncountered;
     
     private void Awake(){
-        animator=GetComponent<Animator>(); 
+       // animator=GetComponent<Animator>(); //Original Unity Animator
+       animator=GetComponent<CharacterAnimator>();  //New Unity Animator
     }
 
     public void HandelUpdate(){
@@ -31,8 +33,12 @@ input.x=Input.GetAxisRaw("Horizontal");
             }
 
     if(input!=Vector2.zero){
-        animator.SetFloat("moveX",input.x);
-          animator.SetFloat("moveY",input.y);
+        // animator.SetFloat("moveX",input.x); //Original Unity Animator
+        // animator.SetFloat("moveY",input.y);
+
+            animator.MoveX=input.x; //New Unity Animator
+            animator.MoveY=input.y;
+
         var TargetPosition=transform.position;
         TargetPosition.x+=input.x;
         TargetPosition.y+=input.y;
@@ -43,7 +49,9 @@ StartCoroutine(Move(TargetPosition));
         
     }
         }
-    animator.SetBool("isMoving", isMoving);
+
+    // animator.SetBool("isMoving", isMoving); //Original Unity Animator
+    animator.isMoving=isMoving;  
 
     if(Input.GetKeyDown(KeyCode.Z)){
         Interact();
@@ -52,7 +60,8 @@ StartCoroutine(Move(TargetPosition));
 
     
     void Interact(){
-        var DirectionFacing = new Vector3(animator.GetFloat("moveX"),animator.GetFloat("moveY"));
+        //var DirectionFacing = new Vector3(animator.GetFloat("moveX"),animator.GetFloat("moveY")); Original Unity Animator
+        var DirectionFacing = new Vector3(animator.MoveX,animator.MoveY); //New Unity Animator
         var interacPosition=transform.position+DirectionFacing;
 
         //Debug.DrawLine(transform.position,interacPosition,Color.green,0.5f); //Test Direction Facing
@@ -91,7 +100,8 @@ StartCoroutine(Move(TargetPosition));
         if(Physics2D.OverlapCircle(transform.position,0.2f,grassEncounterLayer)!=null){
             if(UnityEngine.Random.Range(1,101)<=10){
                 //Debug.Log("Show Encounter");
-                animator.SetBool("isMoving", false);
+                //animator.SetBool("isMoving", false); //Original Unity Animation
+                animator.isMoving=false; // New Unity Animation
                 OnEncountered();
             }
         }
