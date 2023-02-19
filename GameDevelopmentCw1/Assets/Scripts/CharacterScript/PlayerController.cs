@@ -5,10 +5,12 @@ using UnityEngine;
 
     public class PlayerController : MonoBehaviour
     {
-        public LayerMask SolidObjectsLayer; 
-                public LayerMask grassEncounterLayer; 
+     public LayerMask SolidObjectsLayer; 
+     public LayerMask grassEncounterLayer; 
+     public LayerMask interactableLayer; 
+
     public float moveSpeed;
-private Animator animator;
+    private Animator animator;
     private bool isMoving;
     private Vector2 input;
     // when battle is started
@@ -42,6 +44,23 @@ StartCoroutine(Move(TargetPosition));
     }
         }
     animator.SetBool("isMoving", isMoving);
+
+    if(Input.GetKeyDown(KeyCode.Z)){
+        Interact();
+    }
+    }
+
+    
+    void Interact(){
+        var DirectionFacing = new Vector3(animator.GetFloat("moveX"),animator.GetFloat("moveY"));
+        var interacPosition=transform.position+DirectionFacing;
+
+        //Debug.DrawLine(transform.position,interacPosition,Color.green,0.5f); //Test Direction Facing
+
+       var collider= Physics2D.OverlapCircle(interacPosition,0.3f,interactableLayer);
+       if(collider!=null){ //check if collider is null or interactable
+        collider.GetComponent<Interactable>()?.Interact();
+       }
     }
 
     IEnumerator Move(Vector3 TargetPosition){
@@ -60,9 +79,10 @@ StartCoroutine(Move(TargetPosition));
     }
 
     private bool isWalkable(Vector3 TargetPosition){
-     if(Physics2D.OverlapCircle(TargetPosition,0.2f,SolidObjectsLayer)!=null){  
+     if(Physics2D.OverlapCircle(TargetPosition,0.2f,interactableLayer | SolidObjectsLayer)!=null){  
         return false;
      }
+    
      return true;
     }
 
@@ -76,5 +96,9 @@ StartCoroutine(Move(TargetPosition));
             }
         }
     }
+
+
+
+
 
     }
