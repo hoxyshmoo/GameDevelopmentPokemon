@@ -14,7 +14,7 @@ using UnityEngine;
     //private bool isMoving; //depreceted cause of unused
     private Vector2 input;
     // when battle is started
-    public event Action OnEncountered;
+    //public event Action OnEncountered;
     
     private void Awake(){
        // animator=GetComponent<Animator>(); //Original Unity Animator
@@ -46,7 +46,7 @@ input.x=Input.GetAxisRaw("Horizontal");
 //         if(isWalkable(TargetPosition)){
 // StartCoroutine(Move(TargetPosition));
 //         }
-StartCoroutine(character.Move(input,CheckForEncounters));
+StartCoroutine(character.Move(input,OnMoveOver));
         
     }
         }
@@ -71,7 +71,7 @@ StartCoroutine(character.Move(input,CheckForEncounters));
 
        var collider= Physics2D.OverlapCircle(interacPosition,0.3f,GameLayers.i.InteractableLayer);
        if(collider!=null){ //check if collider is null or interactable
-        collider.GetComponent<Interactable>()?.Interact(transform );
+        collider.GetComponent<Interactable>()?.Interact(transform);
        }
     }
 
@@ -99,18 +99,37 @@ StartCoroutine(character.Move(input,CheckForEncounters));
     //  return true;
     // }
 
-
-    private void CheckForEncounters(){
-        
-        if(Physics2D.OverlapCircle(transform.position,0.2f,GameLayers.i.GrassLayer)!=null){
-            if(UnityEngine.Random.Range(1,101)<=10){
-                //Debug.Log("Show Encounter");
-                //animator.SetBool("isMoving", false); //Original Unity Animation
-                character.Animator.isMoving=false; // New Unity Animation
-                OnEncountered();
+    private void OnMoveOver(){
+        var colliders = Physics2D.OverlapCircleAll(transform.position,0.2f,GameLayers.i.TriggerableLayer);         
+  
+        foreach (var collide in colliders)
+        {
+            var triggerable= collide.GetComponent<PlayerTriggerable>();
+            if(triggerable!=null){
+                 character.Animator.isMoving=false; // New Unity Animation
+                triggerable.OnplayerTriggered(this);    
+                break;
             }
         }
+
     }
+
+//Removed to put function into is its own file for reuseability
+    // private void CheckForEncounters(){
+        
+    //     if(Physics2D.OverlapCircle(transform.position,0.2f,GameLayers.i.GrassLayer)!=null){
+    //         if(UnityEngine.Random.Range(1,101)<=10){
+    //             //Debug.Log("Show Encounter");
+    //             //animator.SetBool("isMoving", false); //Original Unity Animation
+    //             character.Animator.isMoving=false; // New Unity Animation
+    //             OnEncountered();
+    //         }
+    //     }
+    // }
+
+    // private void CheckIfInTrainerView(){
+    //     var collider = Physics2D.OverlapCircle(transform.position-new Vector3(0,offsetY),0.2f,GameLayers.i)
+    // }
 
 
 

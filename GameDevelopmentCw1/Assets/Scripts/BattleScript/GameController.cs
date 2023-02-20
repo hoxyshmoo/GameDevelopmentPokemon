@@ -17,9 +17,16 @@ public class GameController : MonoBehaviour
 
     GameState state;
 
+    public static GameController Instance {get; private set;}
+
+    private void Awake(){
+        Instance=this;
+      //  ConditionsDB.Init();
+    }
+
     public void Start()
     {
-        playerController.OnEncountered += StartBattle;
+        //playerController.OnEncountered += StartBattle;
         battleSystem.OnBattleOver += EndBattle;
 
         DialogueManager.Instance.onShowDialogue+=()=>{
@@ -34,7 +41,7 @@ public class GameController : MonoBehaviour
         };
     }
 
-    void StartBattle()
+    public void StartBattle()
     {
         state = GameState.Battle;
         battleSystem.gameObject.SetActive(true);
@@ -65,4 +72,6 @@ public class GameController : MonoBehaviour
             DialogueManager.Instance.HandleUpdate();
         }
     }
+
+    
 }
