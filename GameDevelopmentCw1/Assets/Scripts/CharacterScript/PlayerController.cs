@@ -100,7 +100,7 @@ StartCoroutine(character.Move(input,OnMoveOver));
     // }
 
     private void OnMoveOver(){
-        var colliders = Physics2D.OverlapCircleAll(transform.position,0.2f,GameLayers.i.TriggerableLayer);         
+        var colliders = Physics2D.OverlapCircleAll(transform.position-new Vector3(0,character.OffsetY),0.2f,GameLayers.i.TriggerableLayer);         
   
         foreach (var collide in colliders)
         {
@@ -133,6 +133,6 @@ StartCoroutine(character.Move(input,OnMoveOver));
 
 
 
-
+public Character Character =>character;
 
     }
