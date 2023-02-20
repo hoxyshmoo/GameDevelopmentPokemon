@@ -20,13 +20,19 @@ private void Awake(){
 }
 
 Dialogue dialogue;
+Action onDialogFinished;
 int currentLine=0;
 bool isTyping;
 
-public IEnumerator ShowDialogue(Dialogue dialogue){
+public bool isCurrentlyInDialogue {get; private set;}
+
+public IEnumerator ShowDialogue(Dialogue dialogue,Action onFinished=null){
     yield return new WaitForEndOfFrame();
     onShowDialogue?.Invoke();
+    isCurrentlyInDialogue=true;
     this.dialogue=dialogue;
+    onDialogFinished=onFinished;
+
     dialogueBox.SetActive(true);
     StartCoroutine(TypeDialog(dialogue.Lines[0]));
 }
@@ -39,7 +45,9 @@ if(currentLine<dialogue.Lines.Count){
 }
 else{
     currentLine=0;
+    isCurrentlyInDialogue=false;
     dialogueBox.SetActive(false);
+    onDialogFinished?.Invoke();
     onCloseDialogue?.Invoke();
 }
 }
