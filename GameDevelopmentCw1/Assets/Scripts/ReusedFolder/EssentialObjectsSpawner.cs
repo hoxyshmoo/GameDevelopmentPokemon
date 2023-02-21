@@ -11,5 +11,8 @@ private void Awake(){
     if(existingObjects.Length==0){
         Instantiate(essentialObjectsPrefab,new Vector3(0,0,0),Quaternion.identity);
     }
+    else{
+        Destroy(gameObject);
+    }
 }
 }
