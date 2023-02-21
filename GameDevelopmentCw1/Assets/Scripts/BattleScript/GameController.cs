@@ -6,8 +6,7 @@ public enum GameState
 {
     FreeRoam,
     Battle,
-    Dialogue,
-    Paused
+    Dialogue
 }
 
 public class GameController : MonoBehaviour
@@ -17,7 +16,6 @@ public class GameController : MonoBehaviour
     [SerializeField] Camera worldCamera;
 
     GameState state;
-    GameState stateB4Pause;
 
     public static GameController Instance {get; private set;}
 
@@ -41,17 +39,6 @@ public class GameController : MonoBehaviour
             }
           
         };
-    }
-    //Handles intermediate transition between portal (no glitches)
-    public void pauseGame(bool pause){
-if(pause){
-    stateB4Pause=state;
-    state=GameState.Paused;
-
-}
-else{
-state=stateB4Pause;
-}
     }
 
     public void StartBattle()
