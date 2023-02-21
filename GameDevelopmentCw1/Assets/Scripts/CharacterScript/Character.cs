@@ -9,9 +9,20 @@ public class Character : MonoBehaviour
     CharacterAnimator animator;
     public float moveSpeed;
     public bool IsMoving{get; private set;}
+    public float OffsetY{get; private set;}=0.3f; //Gives character depth perspective
 
     private void Awake(){
         animator=GetComponent<CharacterAnimator>();
+        SetPositionToProperTile(transform.position);
+
+    }
+
+    public void SetPositionToProperTile(Vector2 pos){
+        //Sets the position of the character to the proper tile center
+        pos.x=Mathf.Floor(pos.x)+0.5f;
+        pos.y=Mathf.Floor(pos.y)+0.5f+OffsetY;
+
+        transform.position=pos;
     }
 
     public IEnumerator Move(Vector3 vectorMovement,Action OnMoveOver=null){

@@ -44,12 +44,12 @@ TagManager:
   - name: BackgroundLayer
     uniqueID: 1355913647
     locked: 0
+  - name: ForegroundLayer
+    uniqueID: 427728379
+    locked: 0
   - name: ObjectLayer
     uniqueID: 2357224661
     locked: 0
   - name: PlayerLayer
     uniqueID: 1189862685
-    locked: 0
-  - name: ForegroundLayer
-    uniqueID: 427728379
     locked: 0
