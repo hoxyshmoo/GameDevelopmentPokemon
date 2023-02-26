@@ -157,7 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  checkRadius: 4
+  checkRadius: 5
   shouldRotate: 1
   whatIsPlayer:
     serializedVersion: 2
@@ -1784,7 +1784,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  checkRadius: 4
+  checkRadius: 5
   shouldRotate: 1
   whatIsPlayer:
     serializedVersion: 2
