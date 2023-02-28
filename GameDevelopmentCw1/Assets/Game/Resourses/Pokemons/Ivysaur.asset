@@ -10,27 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7e4f1a9897f87a40b34c2630f508050, type: 3}
-  m_Name: Bulbasaur
+  m_Name: Ivysaur
   m_EditorClassIdentifier: 
-  name: Bulbasaur
+  name: Ivysaur
   description: 
-  front: {fileID: 21300000, guid: 0f37bf3cf5680a64d863b5f155b2a597, type: 3}
-  back: {fileID: 21300000, guid: aacaae602a38f884ab9e02e43de3736d, type: 3}
+  front: {fileID: 21300000, guid: 179bd38ab997c7440844309bc52e708a, type: 3}
+  back: {fileID: 21300000, guid: 653a6fe1d97188644a3747cd5e674bc4, type: 3}
   type1: 5
   type2: 8
-  maxHP: 45
-  attack: 49
-  defence: 49
-  spAttack: 65
-  spDefence: 65
-  speed: 45
-  expYield: 640
+  maxHP: 60
+  attack: 62
+  defence: 63
+  spAttack: 80
+  spDefence: 80
+  speed: 60
+  expYield: 142
   growthRate: 0
   newMoves:
   - pml: {fileID: 11400000, guid: 591e986b6cd0b1a48af1b3c72e957716, type: 2}
     level: 1
   - pml: {fileID: 11400000, guid: c098c5fdf93e7db46833650122f9bbb0, type: 2}
-    level: 4
+    level: 3
   - pml: {fileID: 11400000, guid: e74758f3f6c0aae46bd82e09db694fbe, type: 2}
     level: 7
   - pml: {fileID: 11400000, guid: b89a1036658783d4bacc4c32059dfafe, type: 2}

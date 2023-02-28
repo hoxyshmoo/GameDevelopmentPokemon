@@ -15,6 +15,7 @@ using UnityEngine;
     private Vector2 input;
     // when battle is started
     //public event Action OnEncountered;
+    public event Action<Collider2D> OnEnterTrainerView;
     
     private void Awake(){
        // animator=GetComponent<Animator>(); //Original Unity Animator
@@ -22,7 +23,7 @@ using UnityEngine;
        character=GetComponent<Character>();
     }
 
-    public void HandelUpdate(){
+    public void HandleUpdate(){
         if(!character.IsMoving){
 input.x=Input.GetAxisRaw("Horizontal");
     input.y=Input.GetAxisRaw("Vertical");
@@ -75,6 +76,18 @@ StartCoroutine(character.Move(input,OnMoveOver));
        }
     }
 
+    private void CheckIfInTrainersView()
+    {
+        var collider = Physics2D.OverlapCircle(transform.position, 0.2f, GameLayers.i.FovLayer);
+
+
+        if (collider != null )
+        {
+            character.Animator.isMoving = false;
+            OnEnterTrainerView?.Invoke(collider);
+        }
+    }
+
 //Commented due to importing to Character.cs for more reusable code
     // IEnumerator Move(Vector3 TargetPosition){
 
@@ -111,7 +124,7 @@ StartCoroutine(character.Move(input,OnMoveOver));
                 break;
             }
         }
-
+        CheckIfInTrainersView();
     }
 
 //Removed to put function into is its own file for reuseability

@@ -3,14 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BattleState 
+public enum BattleState
 {
     Start,
     ActionSelection,
     MoveSelection,
     PerformMove,
     Busy,
-    BattleOver
+    BattleOver,
+    PartyScreen
 }
 
 
@@ -18,50 +19,62 @@ public class BattleSystem : MonoBehaviour
 {
     //Player
     [SerializeField] PlayerPk playerPk;
-    //[SerializeField] PlayerHUD playerHUD;
     
     //Enemy
     [SerializeField] PlayerPk EnemyPk;
-    //[SerializeField] PlayerHUD EnemyHUD;
     
     //Dialogs
     [SerializeField] DialogBox dialog;
+    
+    //PartyScreen
+    [SerializeField] PartyScreen partyScreen;
 
     BattleState state;
 
     //When Battle is Over
     public event Action<bool> OnBattleOver;
-    
+
     //Select Action Variable
     int currentAction = 0;
+    
     //Select Move Variable
     int currentMove = 0;
-
+    
+    //Current Party Member
+    int currentMember;
+    
     //escape attempts
     int escapeAttempts;
 
+    PokemonParty playerParty;
+    Pokemon wildPokemon;
+
     // Battle Scene starts
-    public void StartBattle()
+    public void StartBattle(PokemonParty playerParty, Pokemon wildPokemon)
     {
+        this.playerParty = playerParty;
+        this.wildPokemon = wildPokemon;
         StartCoroutine(SetupBattle());
     }
+    
     // Coroutine Function for Battle Scene
     public IEnumerator SetupBattle()
     {
         //player
-        playerPk.CreatePokemon();
-        //playerHUD.SetData(playerPk.Pokemon);
+        playerPk.CreatePokemon(playerParty.GetHealthyPokemon());
         //enemy
-        EnemyPk.CreatePokemon();
-        //EnemyHUD.SetData(EnemyPk.Pokemon);
+        EnemyPk.CreatePokemon(wildPokemon);
+
         //Settings Moves
         dialog.SetMoveNames(playerPk.Pokemon.Moves);
+
+        partyScreen.Init();
         //dialogs
-        yield return dialog.TypeDialog($" A wild {EnemyPk.Pokemon.Base_db.name} appeared !!!");
+        yield return dialog.TypeDialog($" A wild {EnemyPk.Pokemon.Base.name} appeared!");
         ActionSelection();
         escapeAttempts = 0;
     }
-    
+
     //Player Pokemon Move
     IEnumerator PlayerMove()
     {
@@ -69,10 +82,10 @@ public class BattleSystem : MonoBehaviour
         var move = playerPk.Pokemon.Moves[currentMove];
         yield return RunMove(playerPk, EnemyPk, move);
         // If state wasn't changed by RunMove function, the Enemy Move
-        if(state == BattleState.PerformMove)
+        if (state == BattleState.PerformMove)
             StartCoroutine(EnemyMove());
     }
-    
+
     // Wild Pokemon or Enemy Pokemon Move
     IEnumerator EnemyMove()
     {
@@ -89,7 +102,12 @@ public class BattleSystem : MonoBehaviour
     IEnumerator RunMove(PlayerPk sourceUnit, PlayerPk targetUnit, Moves move)
     {
         move.PP--;
-        yield return dialog.TypeDialog($"{sourceUnit.Pokemon.Base_db.Name} used {move.Base.Name} !");
+        yield return dialog.TypeDialog($"{sourceUnit.Pokemon.Base.Name} used {move.Base.Name}.");
+
+        sourceUnit.PlayAttackAnimation();
+        yield return new WaitForSeconds(1f);
+
+        targetUnit.PlayHitAnimation();
 
         var damageDetails = targetUnit.Pokemon.TakeDamage(move, sourceUnit.Pokemon);
         yield return targetUnit.HUD.UpdateHP();
@@ -97,20 +115,39 @@ public class BattleSystem : MonoBehaviour
 
         if (damageDetails.Fainted)
         {
-            yield return dialog.TypeDialog($"{targetUnit.Pokemon.Base_db.Name} fainted !");
+            yield return dialog.TypeDialog($"{targetUnit.Pokemon.Base.Name} fainted!");
+
+            targetUnit.PlayFaintAnimation();
 
             yield return new WaitForSeconds(2f);
-            //OnBattleOver(true);
-            // Gain exp
-            int exp = targetUnit.Pokemon.Base_db.ExpYield;
-            int faintLevel = targetUnit.Pokemon.Level;
+                        
+            if(!targetUnit.IsPlayer) 
+            {
+                // Exp Gained
+                int expYield = targetUnit.Pokemon.Base.ExpYield;
+                int faintLevel = targetUnit.Pokemon.Level;
+                //float trainerBonus = (isTrainerBattle)? 1.5f : 1f;
 
-            int expGain = (exp * faintLevel) / 7;
+                int expGain = Mathf.FloorToInt((expYield * faintLevel /**trainerBonus*/) / 7);
 
-            playerPk.Pokemon.Exp += expGain;
+                playerPk.Pokemon.Exp += expGain;
 
-            yield return dialog.TypeDialog($"{sourceUnit.Pokemon.Base_db.Name} gained {expGain} exp.");
-            // Check for level up
+                yield return dialog.TypeDialog($"{sourceUnit.Pokemon.Base.Name} gained {expGain} exp.");
+                yield return playerPk.HUD.SetExpSmooth();
+
+                // Check for level up
+                while (playerPk.Pokemon.CheckForLevelUp())
+                {
+                    playerPk.HUD.SetLevel();
+                    yield return dialog.TypeDialog($"{playerPk.Pokemon.Base.Name} grew to level {playerPk.Pokemon.Level}.");
+                    //Reset Exp Bar
+                    yield return playerPk.HUD.SetExpSmooth(true);
+                }
+
+                // Time to Exp Gain
+                yield return new WaitForSeconds(1f);
+
+            }
 
             CheckForBattleOver(targetUnit);
         }
@@ -122,7 +159,13 @@ public class BattleSystem : MonoBehaviour
     {
         if (faintedUnit.IsPlayer)
         {
-            BattleOver(false);
+            var nextPokemon = playerParty.GetHealthyPokemon();
+            if (nextPokemon != null)
+            {
+                OpenPartyScreen();
+            }
+            else
+                BattleOver(false);
         }
         else
         {
@@ -130,8 +173,6 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
-
-    
     // Damage after a move
     IEnumerator ShowDamageDetails(DamageDetails damageDetails)
     {
@@ -142,32 +183,45 @@ public class BattleSystem : MonoBehaviour
         else if (damageDetails.TypeEffectiveness < 1f)
             yield return dialog.TypeDialog("It's not very effective!");
     }
-    // Fight or Run
+    
+    // Fight, Bag, Pokemon, Run
     void ActionSelection()
     {
         state = BattleState.ActionSelection;
         StartCoroutine(dialog.TypeDialog("Choose an action."));
         dialog.EnableSelectAction(true);
+
     }
+
+    //Pokemon Selection
+    void OpenPartyScreen()
+    {
+        state = BattleState.PartyScreen;
+        partyScreen.SetPartyData(playerParty.Pokemons);
+        partyScreen.gameObject.SetActive(true);
+    }
+
+
     // Pokemon Move Selection
     void MoveSelection()
     {
-        state= BattleState.MoveSelection;
+        state = BattleState.MoveSelection;
         dialog.EnableSelectAction(false);
         dialog.EnableDiaglogText(false);
         dialog.EnableMoveSelector(true);
     }
-    
 
-    void BattleOver( bool won)
+    //Setting state to battle over
+    void BattleOver(bool won)
     {
-        state= BattleState.BattleOver;
+        state = BattleState.BattleOver;
         OnBattleOver(won);
     }
 
-    public void HandelUpdate()
+    // Check which state is active
+    public void HandleUpdate()
     {
-        if(state == BattleState.ActionSelection)
+        if (state == BattleState.ActionSelection)
         {
             actionSelect();
         }
@@ -175,25 +229,25 @@ public class BattleSystem : MonoBehaviour
         {
             moveSelect();
         }
+        else if (state == BattleState.PartyScreen)
+        {
+            HandlePartySelection();
+        }
     }
 
+    // Selects an action when battle scene starts
     void actionSelect()
     {
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            if (currentAction < 1)
-            {
-                ++currentAction;
-            }
-                
-        }
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+            ++currentAction;
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            ++currentAction;
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+            currentAction += 2;
         else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            if (currentAction > 0)
-            {
-                --currentAction;
-            }
-        }
+            currentAction -= 2;
+
+        currentAction = Mathf.Clamp(currentAction, 0, 3);
 
         dialog.UpdateActionSelection(currentAction);
 
@@ -204,46 +258,37 @@ public class BattleSystem : MonoBehaviour
                 //Fight
                 MoveSelection();
             }
-            else if (currentAction == 1) 
+            else if (currentAction == 1)
+            {
+                //Bag will added in future update
+
+            }
+            else if (currentAction == 2)
+            {
+                //Pokemon
+                OpenPartyScreen();
+            }
+            else if (currentAction == 3)
             {
                 //Run
-                StartCoroutine( TryToEscape());
-            } 
+                StartCoroutine(TryToEscape());
+            }
         }
     }
 
+    //Player Pokemon move selection
     void moveSelect()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            if (currentMove < playerPk.Pokemon.Moves.Count - 1)
-            {
-                ++currentMove;
-            }
-
-        }
+            ++currentMove;
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            if (currentMove > 0)
-            {
-                --currentMove;
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            if (currentMove < playerPk.Pokemon.Moves.Count - 1)
-            {
-                currentMove+=2;
-            }
-
-        }
+            ++currentMove;
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+            currentMove += 2;
         else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            if (currentMove > 1)
-            {
-                currentMove-=2;
-            }
-        }
+            currentMove -= 2;
+
+        currentMove = Mathf.Clamp(currentMove, 0, playerPk.Pokemon.Moves.Count - 1);
 
         dialog.UpdateMoveSelection(currentMove, playerPk.Pokemon.Moves[currentMove]);
 
@@ -253,7 +298,69 @@ public class BattleSystem : MonoBehaviour
             dialog.EnableDiaglogText(true);
             StartCoroutine(PlayerMove());
         }
+        else if (Input.GetKeyDown(KeyCode.X))
+        {
+            dialog.EnableMoveSelector(true);
+            dialog.EnableDiaglogText(false);
+            actionSelect();
+        }
     }
+
+    //Player Party Selection
+    void HandlePartySelection()
+    {
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+            ++currentMember;
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            ++currentMember;
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+            currentMember += 2;
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+            currentMember -= 2;
+
+        currentMember = Mathf.Clamp(currentMember, 0, playerParty.Pokemons.Count - 1);
+        partyScreen.UpdateMemberSelection(currentMember);
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            var selectedMember = playerParty.Pokemons[currentMember];
+            if (selectedMember.HP <= 0)
+            {
+                partyScreen.SetMessageText("Fainted Pokemon cannot battle!");
+                return;
+            }
+            if (selectedMember == playerPk.Pokemon)
+            {
+                partyScreen.SetMessageText("Pokemon already in battle!");
+                return;
+            }
+
+            partyScreen.gameObject.SetActive(false);
+            state = BattleState.Busy;
+            StartCoroutine(SwitchPokemon(selectedMember));
+        }
+        else if (Input.GetKeyDown(KeyCode.X))
+        {
+            partyScreen.gameObject.SetActive(false);
+            ActionSelection();
+        }
+    }
+
+    // Switching to another pokemon in player party
+    IEnumerator SwitchPokemon(Pokemon newPokemon)
+    {
+        yield return dialog.TypeDialog($"{playerPk.Pokemon.Base.Name}, that's enough!");
+        playerPk.PlayFaintAnimation();
+        yield return new WaitForSeconds(2f);
+
+        playerPk.CreatePokemon(newPokemon);
+        dialog.SetMoveNames(newPokemon.Moves);
+        yield return dialog.TypeDialog($"Go {newPokemon.Base.Name} !");
+
+        StartCoroutine(EnemyMove());
+    }
+
+    // Run from battle
     IEnumerator TryToEscape()
     {
         state = BattleState.Busy;
@@ -271,7 +378,7 @@ public class BattleSystem : MonoBehaviour
             float f = (playerSpeed * 128) / enemySpeed + 30 * escapeAttempts;
             f = f % 256;
 
-            if (UnityEngine.Random.Range(0,256) < f)
+            if (UnityEngine.Random.Range(0, 256) < f)
             {
                 yield return dialog.TypeDialog($"Ran away safely!");
                 BattleOver(true);

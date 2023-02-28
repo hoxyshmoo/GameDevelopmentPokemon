@@ -7,23 +7,25 @@ public enum GameState
     FreeRoam,
     Battle,
     Dialogue,
-    Paused
+    Paused,
+    Cutscene
 }
 
 public class GameController : MonoBehaviour
 {
     [SerializeField] PlayerController playerController;
-    [SerializeField] BattleSystem  battleSystem;
+    [SerializeField] BattleSystem battleSystem;
     [SerializeField] Camera worldCamera;
 
     GameState state;
     GameState stateB4Pause;
 
-    public static GameController Instance {get; private set;}
+    public static GameController Instance { get; private set; }
 
-    private void Awake(){
-        Instance=this;
-      //  ConditionsDB.Init();
+    private void Awake()
+    {
+        Instance = this;
+        //  ConditionsDB.Init();
     }
 
     public void Start()
@@ -31,27 +33,40 @@ public class GameController : MonoBehaviour
         //playerController.OnEncountered += StartBattle;
         battleSystem.OnBattleOver += EndBattle;
 
-        DialogueManager.Instance.onShowDialogue+=()=>{
-            state=GameState.Dialogue;
-        };
-        
-        DialogueManager.Instance.onCloseDialogue+=()=>{
-            if(state==GameState.Dialogue){
-            state=GameState.FreeRoam;
+        playerController.OnEnterTrainerView += (Collider2D trainerCollider) => 
+        {
+            var trainer = trainerCollider.GetComponentInParent<TrainerController>();
+            if (trainer != null)
+            {
+                state = GameState.Cutscene;
+                StartCoroutine(trainer.TriggerTrainerBattle(playerController));
             }
-          
+        };
+
+        DialogueManager.Instance.onShowDialogue += () => {
+            state = GameState.Dialogue;
+        };
+
+        DialogueManager.Instance.onCloseDialogue += () => {
+            if (state == GameState.Dialogue)
+            {
+                state = GameState.FreeRoam;
+            }
+
         };
     }
     //Handles intermediate transition between portal (no glitches)
-    public void pauseGame(bool pause){
-if(pause){
-    stateB4Pause=state;
-    state=GameState.Paused;
-
-}
-else{
-state=stateB4Pause;
-}
+    public void pauseGame(bool pause)
+    {
+        if (pause)
+        {
+            stateB4Pause = state;
+            state = GameState.Paused;
+        }
+        else
+        {
+            state = stateB4Pause;
+        }
     }
 
     public void StartBattle()
@@ -60,7 +75,10 @@ state=stateB4Pause;
         battleSystem.gameObject.SetActive(true);
         worldCamera.gameObject.SetActive(false);
 
-        battleSystem.StartBattle();
+        var playerParty = playerController.GetComponent<PokemonParty>();
+        var wildPokemon = FindObjectOfType<Grid>().GetComponent<Grid>().GetRandomWildPokemon();
+
+        battleSystem.StartBattle(playerParty, wildPokemon);
     }
 
     void EndBattle(bool won)
@@ -74,11 +92,11 @@ state=stateB4Pause;
     {
         if (state == GameState.FreeRoam)
         {
-            playerController.HandelUpdate();
+            playerController.HandleUpdate();
         }
         else if (state == GameState.Battle)
         {
-            battleSystem.HandelUpdate();
+            battleSystem.HandleUpdate();
         }
         else if (state == GameState.Dialogue)
         {
@@ -86,5 +104,5 @@ state=stateB4Pause;
         }
     }
 
-    
+
 }

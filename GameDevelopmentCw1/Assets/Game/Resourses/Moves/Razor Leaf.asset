@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 882e91edcc2652349816660039951b7c, type: 3}
-  m_Name: Vine Whip
+  m_Name: Razor Leaf
   m_EditorClassIdentifier: 
-  name: Vine Whip
+  name: Razor Leaf
   description: 
   type: 5
-  power: 35
+  power: 55
   accuracy: 100
   pp: 25

@@ -5,6 +5,7 @@ using UnityEngine;
 [ CreateAssetMenu(fileName = "Pokemon", menuName = "Pokemon/Create New Pokemon")]
 public class PokemonDB : ScriptableObject
 {
+    //Pokemon details
     [SerializeField] new string name;
     [TextArea]
     [SerializeField] string description;
@@ -26,22 +27,19 @@ public class PokemonDB : ScriptableObject
 
     [SerializeField] List<newMoves> newMoves;
 
-    //exposing private variable using properties 
-
+    //exposing private variable using properties
     public string Name { get { return name; } }
     public string Description{ get { return description; }     }
     public Sprite Front { get { return front; } }
     public Sprite Back { get { return back; } }
     public PokeType Type1 { get { return type1; } }
     public PokeType Type2 { get { return type2; } }
-
     public int MaxHP { get { return maxHP; } }
     public int Attack { get { return attack;} }
     public int Defence { get { return defence;} }
     public int SpAttack { get { return spAttack; } }
     public int SpDefence { get { return spDefence;} }
     public int Speed { get { return speed;} }
-    
     public int ExpYield { get { return expYield; } }
     public GrowthRate GrowthRate { get { return growthRate; } }
     public List<newMoves> NewMoves { get { return newMoves; } }
@@ -57,6 +55,7 @@ public class PokemonDB : ScriptableObject
     }
 }
 
+//
 [System.Serializable]
 public class newMoves
 {
@@ -66,6 +65,7 @@ public class newMoves
     public PokemonMovesList PML { get { return pml; } }
     public int Level { get { return level; } }
 }
+
 //Pokemon GrowthRate
 public enum GrowthRate
 {
@@ -78,8 +78,8 @@ public enum PokeType {
     Normal,
     Fire,
     Water,
-    Grass,
     Electric,
+    Grass,
     Ice,
     Fighting,
     Poison,
@@ -95,26 +95,34 @@ public enum PokeType {
     Fairy
 }
 
+// How diffrent types does damage to one another
 public class TypeChart
 {
     static float[][] chart =
     {
-        //                    NOR FIR   WAT   ELE   GRA 
-        /*NOR*/ new float[] { 1f, 1f,   1f,   1f,   1f },
-        /*FIR*/ new float[] { 1f, 0.5f, 0.5f, 1f,   2f },
-        /*WAT*/ new float[] { 1f, 2f,   0.5f, 2f,   0.5f },
-        /*ELE*/ new float[] { 1f, 1f,   2f,   0.5f, 0.5f },
-        /*GRS*/ new float[] { 1f, 0.5f, 2f,   2f,   0.5f }
+        //                  NOR  FIR   WAT   ELE  	GRA   ICE   FIG  POI
+        /*NOR*/ new float[] {1f, 1f,   1f,   1f,    1f,   1f,   1f,  1f},
+        /*FIR*/ new float[] {1f, 0.5f, 0.5f, 1f,    2f,   2f,   1f,  1f},
+        /*WAT*/ new float[] {1f, 2f,   0.5f, 1f,    0.5f, 1f,   1f,  1f},
+        /*ELE*/ new float[] {1f, 1f,   2f,   0.5f,  0.5f, 1f,   1f,  1f},
+        /*GRA*/ new float[] {1f, 0.5f, 2f,   1f,    0.5f, 1f,   1f,  0.5f},
+        /*ICE*/ new float[] {1f, 0.5f, 0.5f, 1f,    2f,   0.5f, 1f,  1f},
+        /*FIG*/ new float[] {2f, 1f,   1f,   1f,    1f,   2f,   1f,  0.5f},
+        /*POI*/ new float[] {1f, 1f,   1f,   1f,    1f,   1f,   1f,  0.5f}
 
     };
 
     public static float GetEffectiveness(PokeType attackType, PokeType defenseType)
     {
-        if (attackType == PokeType.None || defenseType == PokeType.None)
+        if (attackType == PokeType.None || defenseType == PokeType.None) 
+        { 
             return 1;
+        }
+
         int row = (int)attackType -1;
         int col = (int)defenseType -1;
-
+        Debug.Log("row: " + row);
+        Debug.Log("col: " + col);
         return chart[row][col];
     }
 }
