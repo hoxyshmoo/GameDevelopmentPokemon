@@ -44,6 +44,7 @@ public class PokemonDB : ScriptableObject
     public GrowthRate GrowthRate { get { return growthRate; } }
     public List<newMoves> NewMoves { get { return newMoves; } }
 
+    // Check required exp for level gain
     public int GetExpForLevel(int level)
     {
         if (growthRate == GrowthRate.Fast)
@@ -67,10 +68,7 @@ public class newMoves
 }
 
 //Pokemon GrowthRate
-public enum GrowthRate
-{
-    Fast, MediumFast
-}
+public enum GrowthRate{ Fast, MediumFast }
 
 //Pokemon Types
 public enum PokeType {
@@ -120,9 +118,13 @@ public class TypeChart
         }
 
         int row = (int)attackType -1;
+        //Debug.Log("row: " + row);
+        //Debug.Log("attackType: " + attackType);
+
         int col = (int)defenseType -1;
-        Debug.Log("row: " + row);
-        Debug.Log("col: " + col);
+        //Debug.Log("col: " + row);
+        //Debug.Log("defenseType: " + defenseType);
+        //if (row => 4 && col )
         return chart[row][col];
     }
 }

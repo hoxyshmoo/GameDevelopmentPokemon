@@ -111,9 +111,22 @@ public class Pokemon
     }
     
     // Wild Pokemon AI
-    public Moves RandomMove()
+    public Moves RandomMove(int HP)
     {
-        int r = Random.Range(0, Moves.Count);
+        int currentHP = HP;
+        int r = 0;
+        if (currentHP >= (MaxHP/0.25))
+        {
+            r = Random.Range(0, Moves.Count);
+        }
+        else if (currentHP >= (MaxHP/0.5))
+        {
+            r = Random.Range(1, Moves.Count);
+        }
+        else if( currentHP >= (MaxHP/0.66))
+        {
+            r = Random.Range(2, Moves.Count);
+        }
         return Moves[r];
     }
 }

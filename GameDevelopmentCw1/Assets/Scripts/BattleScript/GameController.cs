@@ -2,14 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum GameState
-{
-    FreeRoam,
-    Battle,
-    Dialogue,
-    Paused,
-    Cutscene
-}
+public enum GameState{ FreeRoam, Battle, Dialogue, Paused, Cutscene }
 
 public class GameController : MonoBehaviour
 {
@@ -55,6 +48,7 @@ public class GameController : MonoBehaviour
 
         };
     }
+    
     //Handles intermediate transition between portal (no glitches)
     public void pauseGame(bool pause)
     {
@@ -69,6 +63,7 @@ public class GameController : MonoBehaviour
         }
     }
 
+    // Start battle scene for encountring wild pokemon
     public void StartBattle()
     {
         state = GameState.Battle;
@@ -81,13 +76,35 @@ public class GameController : MonoBehaviour
         battleSystem.StartBattle(playerParty, wildPokemon);
     }
 
+    TrainerController trainer;
+    // Start battle for trainer
+    public void StartTrainerBattle(TrainerController trainer)
+    {
+        state = GameState.Battle;
+        battleSystem.gameObject.SetActive(true);
+        worldCamera.gameObject.SetActive(false);
+
+        this.trainer = trainer;
+        var playerParty = playerController.GetComponent<PokemonParty>();
+        var trainerParty = trainer.GetComponent<PokemonParty>();
+
+        battleSystem.StartTrainerBattle(playerParty, trainerParty);
+    }
+
+    //End battle Scene
     void EndBattle(bool won)
     {
+        if(trainer != null && won == true )
+        {
+            trainer.BattleLost();
+            trainer = null;
+        }
         state = GameState.FreeRoam;
         battleSystem.gameObject.SetActive(false);
         worldCamera.gameObject.SetActive(true);
     }
 
+    // Update game state
     private void Update()
     {
         if (state == GameState.FreeRoam)

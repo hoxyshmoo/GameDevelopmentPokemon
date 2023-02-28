@@ -17,7 +17,7 @@ MonoBehaviour:
   front: {fileID: 21300000, guid: d819d29c71518d340b52028b17af51c2, type: 3}
   back: {fileID: 21300000, guid: 4e7023cd378451d4d80b1c653bb62ff7, type: 3}
   type1: 2
-  type2: 10
+  type2: 0
   maxHP: 78
   attack: 54
   defence: 78
@@ -27,11 +27,11 @@ MonoBehaviour:
   expYield: 267
   growthRate: 1
   newMoves:
-  - pml: {fileID: 11400000, guid: 528138bdf9cb70847ad78f9c1ca8735b, type: 2}
-    level: 1
   - pml: {fileID: 11400000, guid: c098c5fdf93e7db46833650122f9bbb0, type: 2}
-    level: 3
+    level: 1
+  - pml: {fileID: 11400000, guid: 528138bdf9cb70847ad78f9c1ca8735b, type: 2}
+    level: 4
   - pml: {fileID: 11400000, guid: 7640449cdee769644b4da639fcd53bf2, type: 2}
-    level: 3
+    level: 5
   - pml: {fileID: 11400000, guid: f5f8425e8579d4449ae2925c691fe863, type: 2}
     level: 8

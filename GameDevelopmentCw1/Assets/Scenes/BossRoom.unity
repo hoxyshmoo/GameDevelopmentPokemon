@@ -15350,6 +15350,7 @@ GameObject:
   - component: {fileID: 1367838382}
   - component: {fileID: 1367838381}
   - component: {fileID: 1367838388}
+  - component: {fileID: 1367838389}
   m_Layer: 10
   m_Name: Trainer
   m_TagString: Untagged
@@ -15531,10 +15532,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3eec673839fecf0418deb2f7383caba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: Cool Trainer Nate
+  sprite: {fileID: 21300000, guid: f903e98096ae9cb46bfe5807afb0c9a2, type: 3}
   exclamation: {fileID: 438912532}
   dialog:
     lines:
     - I'm the final Boss. Lets Fight!
+  dialogAfterBattle:
+    lines:
+    - Immpossible! I cannot lose!
+  fov: {fileID: 1913402970}
+--- !u!114 &1367838389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367838380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 919732c06d4470640a0704f09ad26295, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pokemons:
+  - _base: {fileID: 11400000, guid: eda501c77c10a1d4a9a4f92213e59ee8, type: 2}
+    level: 45
 --- !u!1 &1913402970
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,13 +6,12 @@ using DG.Tweening;
 
 public class PlayerPk : MonoBehaviour
 {
-    //[SerializeField] PokemonDB db;
-    //[SerializeField] int level;
     [SerializeField] bool isPlayer;
     [SerializeField] PlayerHUD hud;
 
     //Exposing HUD variable
     public PlayerHUD HUD { get { return hud; } }
+    
     //Exposing Pokemon variable
     public Pokemon Pokemon { get; set; }
 
@@ -27,11 +26,14 @@ public class PlayerPk : MonoBehaviour
         originalColor = image.color;
     }
 
+    // exposing via property
     public bool IsPlayer { get { return isPlayer; } }
 
+    //Setting up the battle scene
     public void CreatePokemon(Pokemon pokemon)
     {
         Pokemon = pokemon;
+        hud.gameObject.SetActive(true);
         hud.SetData(Pokemon);
 
         if (isPlayer)
@@ -41,7 +43,14 @@ public class PlayerPk : MonoBehaviour
 
         PlayEnterAnimation();
     }
+    
+    //hiding pokemon hub during player battle scene
+    public void Clear()
+    {
+        hud.gameObject.SetActive(false);
+    }
 
+    //Enter Animation usi Dotween
     public void PlayEnterAnimation()
     {
         if (isPlayer)
@@ -52,6 +61,7 @@ public class PlayerPk : MonoBehaviour
         image.transform.DOLocalMoveX(originalPos.x, 1f);
     }
 
+    //Attack Animation usnig Dotween
     public void PlayAttackAnimation()
     {
         var sequence = DOTween.Sequence();
@@ -63,6 +73,7 @@ public class PlayerPk : MonoBehaviour
         sequence.Append(image.transform.DOLocalMoveX(originalPos.x, 0.25f));
     }
 
+    //Pokemon hit animation
     public void PlayHitAnimation()
     {
         var sequence = DOTween.Sequence();
@@ -71,6 +82,7 @@ public class PlayerPk : MonoBehaviour
 
     }
 
+    //Pokemon faint animation
     public void PlayFaintAnimation()
     {
         var sequence = DOTween.Sequence();

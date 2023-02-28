@@ -27,10 +27,10 @@ MonoBehaviour:
   expYield: 63
   growthRate: 0
   newMoves:
-  - pml: {fileID: 11400000, guid: 528138bdf9cb70847ad78f9c1ca8735b, type: 2}
-    level: 1
   - pml: {fileID: 11400000, guid: c098c5fdf93e7db46833650122f9bbb0, type: 2}
-    level: 3
+    level: 1
+  - pml: {fileID: 11400000, guid: 528138bdf9cb70847ad78f9c1ca8735b, type: 2}
+    level: 4
   - pml: {fileID: 11400000, guid: ba72fc4f444d4694295cac16d9512106, type: 2}
     level: 7
   - pml: {fileID: 11400000, guid: 9d0ca0b2880330c43bfb7bc1d81a2a86, type: 2}

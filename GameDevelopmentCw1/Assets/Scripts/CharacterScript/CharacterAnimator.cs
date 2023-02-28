@@ -10,7 +10,7 @@ public class CharacterAnimator : MonoBehaviour
 [SerializeField] List<Sprite> wUpSprite;
 [SerializeField] List<Sprite> wRightSprite;
 [SerializeField] List<Sprite> wLeftSprite;
-    [SerializeField] FacingDirection defaultDirection = FacingDirection.Down;
+[SerializeField] FacingDirection defaultDirection = FacingDirection.Down;
 
     //Parameters for Moving
     public float MoveX {get; set;}
@@ -84,6 +84,10 @@ public class CharacterAnimator : MonoBehaviour
         else if (dir == FacingDirection.Up)
             MoveY = 1;
     }
+
+    //Exposing the defaultDirection
+    public FacingDirection DefaultDirection { get => defaultDirection; }
+
 }
 
 public enum FacingDirection

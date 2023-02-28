@@ -5,7 +5,10 @@ using UnityEngine;
 
     public class PlayerController : MonoBehaviour
     {
-    
+    // variables
+    [SerializeField] string name;
+    [SerializeField] Sprite sprite;
+
     //public float moveSpeed;
     //private Animator animator; //Original Unity Animator
     //private CharacterAnimator animator; //New Unity Animator
@@ -127,9 +130,19 @@ StartCoroutine(character.Move(input,OnMoveOver));
         CheckIfInTrainersView();
     }
 
-//Removed to put function into is its own file for reuseability
+    public string Name
+    {
+        get => name;
+    }
+
+    public Sprite Sprite
+    {
+        get => sprite;
+    }
+
+    //Removed to put function into is its own file for reuseability
     // private void CheckForEncounters(){
-        
+
     //     if(Physics2D.OverlapCircle(transform.position,0.2f,GameLayers.i.GrassLayer)!=null){
     //         if(UnityEngine.Random.Range(1,101)<=10){
     //             //Debug.Log("Show Encounter");
@@ -146,6 +159,6 @@ StartCoroutine(character.Move(input,OnMoveOver));
 
 
 
-public Character Character =>character;
+    public Character Character =>character;
 
     }
