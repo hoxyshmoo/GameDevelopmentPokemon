@@ -9,6 +9,8 @@ What is included in the pack:
 
 Pokemon sprites from website --->https://archives.bulbagarden.net/wiki/Category:FireRed_and_LeafGreen_sprites
 
+						https://archives.bulbagarden.net/wiki/Category:FireRed_and_LeafGreen_back_sprites
+
 Pokémon type chart: strengths and weaknesses | Pokémon Database --->(pokemondb.net)
 Damage - Bulbapedia, the community-driven Pokémon encyclopedia --->(bulbagarden.net)
 Experience - Bulbapedia, the community-driven Pokémon encyclopedia --->(bulbagarden.net)
