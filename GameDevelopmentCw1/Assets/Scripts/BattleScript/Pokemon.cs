@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// creates 
 [System.Serializable]
 public class Pokemon
 {
@@ -92,10 +93,10 @@ public class Pokemon
             Critical = critical,
             Fainted = false
         };
-
+        // Which type of aatack and defence to use to damage taken
         float attack = (move.Base.IsSpecial) ? attacker.SpAttack : attacker.Attack;
         float defence = (move.Base.IsSpecial) ? attacker.SpDefence : attacker.SpDefence;
-
+        //main formula to calculate the damage done to pokemon
         float modifiers = Random.Range(0.85f, 1f) * type * critical;
         float a = (2 * attacker.Level + 10) / 250f;
         float d = a * move.Base.Power * ((float)attack / defence);
@@ -139,7 +140,7 @@ public class Pokemon
               
     }
 }
-
+// Details of the damage done and state of pokemon 
 public class DamageDetails
 {
     public bool Fainted { get; set; }

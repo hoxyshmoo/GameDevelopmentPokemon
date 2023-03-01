@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-
+//Displays the HUD for pokemons like name, level health and exp gained.
 public class PlayerHUD : MonoBehaviour
 {
     [SerializeField] Text PkName;

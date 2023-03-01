@@ -56,7 +56,7 @@ public class PokemonDB : ScriptableObject
     }
 }
 
-//
+//create new moves
 [System.Serializable]
 public class newMoves
 {

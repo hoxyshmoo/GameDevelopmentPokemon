@@ -484,7 +484,7 @@ public class BattleSystem : MonoBehaviour
             BattleOver(true);
         }
         else
-        {
+        {   // formula to run away from a pokemon encounter
             float f = (playerSpeed * 128) / enemySpeed + 30 * escapeAttempts;
             f = f % 256;
 

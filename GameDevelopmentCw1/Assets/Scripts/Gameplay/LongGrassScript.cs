@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LongGrassScript : MonoBehaviour, PlayerTriggerable
 {
+    //Script to activate the start battle when walking across long grass layer objects
  public void OnplayerTriggered(PlayerController player){
     
 

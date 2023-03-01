@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Move", menuName = "Pokemon/Create New Move")]
 public class PokemonMovesList : ScriptableObject
 {
+    //List of variables that a pokemon move requires
     [SerializeField] new string name;
     [TextArea]
     [SerializeField] string description;
@@ -20,7 +21,7 @@ public class PokemonMovesList : ScriptableObject
     public int Power { get { return power; } }
     public int Accuracy { get { return accuracy;} }
     public int PP { get { return pp; } }
-    // Is the move Special or Physical
+    // Is the move Special or Physical attack
     public bool IsSpecial
     {
         get

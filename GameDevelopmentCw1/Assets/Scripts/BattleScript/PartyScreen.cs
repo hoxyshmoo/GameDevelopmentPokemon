@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//Displays party screeen for player
 public class PartyScreen : MonoBehaviour
 {
     [SerializeField] Text messageText;
@@ -34,7 +34,7 @@ public class PartyScreen : MonoBehaviour
 
         messageText.text = "Choose a Pokemon.";
     }
-     
+    // Selects the pokemon on party screen
     public void UpdateMemberSelection(int selectedMember)
     {
         for (int i = 0; i < pokemons.Count; i++)
@@ -45,7 +45,7 @@ public class PartyScreen : MonoBehaviour
                 memberSlots[i].SetSelected(false);
         }
     }
-
+    // Displays messages in party screen
     public void SetMessageText(string message)
     {
         messageText.text = message;

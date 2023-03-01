@@ -20,15 +20,12 @@ public class DialogBox : MonoBehaviour
     [SerializeField] Text PPtext;
     [SerializeField] Text MoveType;
     
-
-
-
-
+    //Sets Dialog in Battle Scenes
     public void SetDialog(string text)
     {
         DialogText.text = text;
     }
-
+    // Animates the text in the dialog
     public IEnumerator TypeDialog(string text)
     {
         DialogText.text = "";
@@ -39,22 +36,23 @@ public class DialogBox : MonoBehaviour
         }
         yield return new WaitForSeconds(1f);
     }
-
+    // Shows Dialog text in  battle scene
     public void EnableDiaglogText(bool enabled)
     {
         DialogText.enabled = enabled;
     }
-
+    // Action Menu in battle scene
     public void EnableSelectAction(bool enabled)
     {
         SelectAction.SetActive(enabled);
     }
-
+    // Move Selector for the pokemon moves
     public void EnableMoveSelector(bool enabled)
     {
         MoveSelector.SetActive(enabled);
         MoveDetails.SetActive(enabled);
     }
+    //highlight the actions selected
     public void UpdateActionSelection(int select)
     {
         for(int i=0; i<actionText.Count; i++)
@@ -67,7 +65,7 @@ public class DialogBox : MonoBehaviour
                 actionText[i].color = Color.black;
         }
     }
-
+    // Sets the moves name in the move selector
     public void SetMoveNames(List<Moves> moves)
     {
         for(int i=0; i< moveText.Count; i++)
@@ -78,7 +76,7 @@ public class DialogBox : MonoBehaviour
                 moveText[i].text = "-";
         }
     }
-
+    // Higighlited selected move of the pokemon
     public void UpdateMoveSelection(int select, Moves move)
     { 
         for (int i=0; i<moveText.Count; i++ )

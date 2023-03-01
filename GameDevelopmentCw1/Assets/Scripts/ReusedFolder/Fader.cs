@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
+//Fader objct for dotween animawtion between scene and pokemon start battle scenes
 public class Fader : MonoBehaviour
 {
    Image img;

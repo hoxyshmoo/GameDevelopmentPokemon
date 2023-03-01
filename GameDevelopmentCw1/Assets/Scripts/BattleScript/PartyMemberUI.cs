@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// how pokemon looks in party screen
 public class PartyMemberUI : MonoBehaviour
 {
     [SerializeField] Text PkName;
@@ -22,7 +23,7 @@ public class PartyMemberUI : MonoBehaviour
         PkLevel.text = "Lvl: " + pk.Level;
         hp.SetHP((float)pk.HP / pk.MaxHP);
     }
-
+    // highlights Color for the selected pokemon
     public void SetSelected(bool selected)
     {
         if (selected)

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+
+//Craetes a pokemon party for the player and trainer npc
 public class PokemonParty : MonoBehaviour
 {
     [SerializeField] List<Pokemon> pokemons;
@@ -20,7 +22,7 @@ public class PokemonParty : MonoBehaviour
             //Debug.Log("Pokemon: "+ pokemon.Base.Name);
         }
     }
-
+    // returns the first healthy pokemon from the party
     public Pokemon GetHealthyPokemon()
     {
         return pokemons.Where(x => x.HP > 0).FirstOrDefault();

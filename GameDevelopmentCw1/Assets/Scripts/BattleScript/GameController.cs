@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum GameState{ FreeRoam, Battle, Dialogue, Paused, Cutscene }
-
+// Main controller for free roam and battle scene
 public class GameController : MonoBehaviour
 {
     [SerializeField] PlayerController playerController;
@@ -13,7 +13,7 @@ public class GameController : MonoBehaviour
     GameState state;
     GameState stateB4Pause;
 
-    public static GameController Instance { get; private set; }
+    public static GameController Instance { get; private set; } // intace for trainer battle
 
     private void Awake()
     {
@@ -25,7 +25,7 @@ public class GameController : MonoBehaviour
     {
         //playerController.OnEncountered += StartBattle;
         battleSystem.OnBattleOver += EndBattle;
-
+        // Trainer battle starts here after spoting the player
         playerController.OnEnterTrainerView += (Collider2D trainerCollider) => 
         {
             var trainer = trainerCollider.GetComponentInParent<TrainerController>();
@@ -35,11 +35,11 @@ public class GameController : MonoBehaviour
                 StartCoroutine(trainer.TriggerTrainerBattle(playerController));
             }
         };
-
+        //Interaction dialog of trainer NPCs
         DialogueManager.Instance.onShowDialogue += () => {
             state = GameState.Dialogue;
         };
-
+        //after the battle, changes state to free raom such that player moves 
         DialogueManager.Instance.onCloseDialogue += () => {
             if (state == GameState.Dialogue)
             {

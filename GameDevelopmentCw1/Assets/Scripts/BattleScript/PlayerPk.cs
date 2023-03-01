@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
+//class for pokemon in battle secene
 public class PlayerPk : MonoBehaviour
 {
     [SerializeField] bool isPlayer;
