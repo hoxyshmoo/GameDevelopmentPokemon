@@ -6,14 +6,15 @@ using System;
 public class Character : MonoBehaviour
 {
 
+    //Character animator variable
     CharacterAnimator animator;
-    public float moveSpeed;
+    public float moveSpeed; //Movespeed variable
     public bool IsMoving{get; private set;}
     public float OffsetY{get; private set;}=0.3f; //Gives character depth perspective
 
     private void Awake(){
-        animator=GetComponent<CharacterAnimator>();
-        SetPositionToProperTile(transform.position);
+        animator=GetComponent<CharacterAnimator>(); //Get  character animation component
+        SetPositionToProperTile(transform.position); // Set the depth perspective of the main character
 
     }
 
@@ -30,38 +31,38 @@ public class Character : MonoBehaviour
         animator.MoveX=Mathf.Clamp(vectorMovement.x,-1f,1f); //New Unity Animator
         animator.MoveY=Mathf.Clamp(vectorMovement.y,-1f,1f);
 
-        var TargetPosition=transform.position;
-        TargetPosition.x+=vectorMovement.x;
+        var TargetPosition=transform.position; //get current location
+        TargetPosition.x+=vectorMovement.x; //update x and y coordinates for target position
         TargetPosition.y+=vectorMovement.y;
 
-        if(!IsPathClear(TargetPosition)){
+        if(!IsPathClear(TargetPosition)){ //continously check if path is clear, if not continue checking, if clear will yield break
             yield break;
         }
 
     IsMoving=true;
 
         while((TargetPosition-transform.position).sqrMagnitude> Mathf.Epsilon){
-            transform.position=Vector3.MoveTowards(transform.position,TargetPosition,moveSpeed*Time.deltaTime);
+            transform.position=Vector3.MoveTowards(transform.position,TargetPosition,moveSpeed*Time.deltaTime); //update actual character movement
             yield return null;
         
         }
-        transform.position=TargetPosition;
+        transform.position=TargetPosition; //assign current position to final position
         IsMoving=false;
 
-        OnMoveOver?.Invoke();
+        OnMoveOver?.Invoke(); 
         //CheckForEncounters();
     }
 
     public void HandleUpdate(){
-        animator.isMoving=IsMoving;
+        animator.isMoving=IsMoving; //check if animator is current moving
     }
 
-    private bool IsPathClear(Vector3 TargetPosition){
+    private bool IsPathClear(Vector3 TargetPosition){ //path is clear function
         var diffDistance=TargetPosition-transform.position;
         var direction=diffDistance.normalized;
 
 
-
+        //physics box to check for collision in path
         if(Physics2D.BoxCast(transform.position+direction,new Vector2(0.2f,0.2f),0f,direction,diffDistance.magnitude-1,GameLayers.i.SolidLayer | GameLayers.i.InteractableLayer | GameLayers.i.PlayerLayer)==true){
             return false;
         }
@@ -70,7 +71,9 @@ public class Character : MonoBehaviour
 
     }
 
+    //checks if path shown is walkable
  private bool isWalkable(Vector3 TargetPosition){
+    //looks at only solid layer (where solid objects are situated) and the iteractable layer(where interactable objects are situated)
      if(Physics2D.OverlapCircle(TargetPosition,0.2f,GameLayers.i.SolidLayer | GameLayers.i.InteractableLayer)!=null){  
         return false;
      }
@@ -78,6 +81,7 @@ public class Character : MonoBehaviour
      return true;
     }
 
+    //Makes the npc look at the main character when interaction with them using the key "z"
     public void LookAttention(Vector3 TargetPosition){
         var xDiff=Mathf.Floor(TargetPosition.x)-Mathf.Floor(transform.position.x);
         var yDiff=Mathf.Floor(TargetPosition.y)-Mathf.Floor(transform.position.y);
@@ -92,6 +96,7 @@ public class Character : MonoBehaviour
 
     }
 
+    //Expose animator as property
     public CharacterAnimator Animator{
         get => animator;
     }

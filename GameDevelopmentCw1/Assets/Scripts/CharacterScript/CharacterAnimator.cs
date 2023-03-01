@@ -33,6 +33,7 @@ public class CharacterAnimator : MonoBehaviour
     private void Start(){
         spriteRend=GetComponent<SpriteRenderer>();
 
+        //assigns sprite animations to corresponding variables
         wDownAnimation=new SpriteAnimator(wDownSprite,spriteRend); 
         wUpAnimation=new SpriteAnimator(wUpSprite,spriteRend); 
         wRightAnimation=new SpriteAnimator(wRightSprite,spriteRend); 
@@ -47,6 +48,7 @@ public class CharacterAnimator : MonoBehaviour
 
         var prevAnimationState = currentAnimationState;
 
+        // Check current Move orientation and assign appropriate sprites
         if(MoveX==1){
             currentAnimationState=wRightAnimation;
         }
@@ -73,6 +75,7 @@ public class CharacterAnimator : MonoBehaviour
         wasPrevMoving=isMoving; //Fixes Character Sliding
     }
 
+    //set default direction for trainer and npc
     public void SetFacingDirection(FacingDirection dir)
     {
         if (dir == FacingDirection.Right)
@@ -89,5 +92,5 @@ public class CharacterAnimator : MonoBehaviour
     public FacingDirection DefaultDirection { get => defaultDirection; }
 
 }
-
+//enum for directions
 public enum FacingDirection { Up, Down, Left, Right }

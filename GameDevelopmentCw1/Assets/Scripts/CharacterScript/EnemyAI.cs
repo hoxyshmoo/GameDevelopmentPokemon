@@ -19,19 +19,26 @@ public class EnemyAI : MonoBehaviour
   //private bool isInAttackRange;
 
   private void Start(){
+    //assign rigid body for the enemy ai 
     rb=GetComponent<Rigidbody2D>();
     anim=GetComponent<Animator>();
+    //find the target object to follow
     target=GameObject.FindWithTag("Player").transform; 
 
   }
 
   private void Update(){
+    //set anim to running if target is in range
     anim.SetBool("isRunning",isInChaseRange);
+
+    //checks for target position and if its in range
     isInChaseRange=Physics2D.OverlapCircle(transform.position,checkRadius,whatIsPlayer);
     direction=target.position-transform.position;
+
     float angle=Mathf.Atan2(direction.y,direction.x)*Mathf.Rad2Deg;
     direction.Normalize();
     movement=direction;
+    //checks if enemy should rotate
     if(shouldRotate){
         anim.SetFloat("X",direction.x);
          anim.SetFloat("Y",direction.y);
@@ -44,9 +51,11 @@ if(isInChaseRange){
 }
   }
 
+//move character function
   private void MoveCharacter(Vector2 dir){
 
     if(Vector2.Distance(transform.position,target.position)> 2){
+                //updates rigid body physics for collision and movement
                 rb.MovePosition((Vector2)transform.position+(dir*speed*Time.deltaTime));
         }
         else{

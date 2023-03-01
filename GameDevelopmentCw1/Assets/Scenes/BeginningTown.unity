@@ -2353,9 +2353,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogue:
     lines:
-    - I heard the other guy sells the good stuff
-    - But if anyone ask, it wasnt me who told you
-    - Now Scram, before i beat you
+    - 'Try looking at the grass. '
+    - You might find something interesting!
+    - Good luck on your adventures.
   movePattern:
   - {x: 2, y: 0}
   - {x: 0, y: -2}
@@ -126264,9 +126264,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogue:
     lines:
-    - Yo, I got some sick weed.
-    - You want some?
-    - I got plenty in the back.
+    - Be careful entering the middle house on top.
+    - Someone there is very territorial
+    - He might even "attack" you.
   movePattern:
   - {x: 4, y: 0}
   - {x: 0, y: -4}

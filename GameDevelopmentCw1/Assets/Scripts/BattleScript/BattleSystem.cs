@@ -218,22 +218,7 @@ public class BattleSystem : MonoBehaviour
 
 
 
-                //Win-Lose Dialog
-                var nextPokemon = playerParty.GetHealthyPokemon();
-                int partyCount = playerParty.Pokemons.Count;
-
-                if (targetUnit.IsPlayer && nextPokemon == null && partyCount > 0 ) 
-                {
-                    yield return dialog.TypeDialog("You Lost, Try again next time!!");
-                }
-                else if (isWild)
-                {
-                    yield return dialog.TypeDialog("Good!! Wild Pokemon defeated!");
-                }
-                else
-                {
-                    yield return dialog.TypeDialog("Hurray!! You won!");
-                }
+                
             
                 // Time to Exp Gain
                 yield return new WaitForSeconds(1f);
