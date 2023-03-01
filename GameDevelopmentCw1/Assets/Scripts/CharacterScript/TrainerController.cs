@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TrainerController : MonoBehaviour, Interactable
 {
-    [SerializeField] string name;
+    [SerializeField] new string name;
     [SerializeField] Sprite sprite;
     [SerializeField] GameObject exclamation;
     [SerializeField] Dialogue dialog;
@@ -12,7 +12,7 @@ public class TrainerController : MonoBehaviour, Interactable
     [SerializeField] GameObject fov;
 
     // State
-    bool battleLost= false;
+    bool battleLost = false;
 
     Character character;
 

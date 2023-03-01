@@ -6,7 +6,7 @@ using UnityEngine;
     public class PlayerController : MonoBehaviour
     {
     // variables
-    [SerializeField] string name;
+    [SerializeField] new string name;
     [SerializeField] Sprite sprite;
 
     //public float moveSpeed;

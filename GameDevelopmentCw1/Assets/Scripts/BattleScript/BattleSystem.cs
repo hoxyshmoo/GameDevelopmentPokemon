@@ -58,6 +58,7 @@ public class BattleSystem : MonoBehaviour
     Pokemon wildPokemon;
 
     bool isTrainerBattle;
+    bool isWild;
 
     PlayerController player;
     TrainerController trainer;
@@ -100,6 +101,8 @@ public class BattleSystem : MonoBehaviour
             
             //dialogs
             yield return dialog.TypeDialog($" A wild {EnemyPk.Pokemon.Base.name} appeared!");
+            isWild= true;
+
         }
         else
         {
@@ -200,9 +203,11 @@ public class BattleSystem : MonoBehaviour
                 playerPk.Pokemon.Exp += expGain;
 
                 yield return dialog.TypeDialog($"{sourceUnit.Pokemon.Base.Name} gained {expGain} exp.");
+            
+            if (!targetUnit.IsPlayer)
                 yield return playerPk.HUD.SetExpSmooth();
 
-                // Check for level up
+                    // Check for level up
                 while (playerPk.Pokemon.CheckForLevelUp())
                 {
                     playerPk.HUD.SetLevel();
@@ -211,6 +216,25 @@ public class BattleSystem : MonoBehaviour
                     yield return playerPk.HUD.SetExpSmooth(true);
                 }
 
+
+
+                //Win-Lose Dialog
+                var nextPokemon = playerParty.GetHealthyPokemon();
+                int partyCount = playerParty.Pokemons.Count;
+
+                if (targetUnit.IsPlayer && nextPokemon == null && partyCount > 0 ) 
+                {
+                    yield return dialog.TypeDialog("You Lost, Try again next time!!");
+                }
+                else if (isWild)
+                {
+                    yield return dialog.TypeDialog("Good!! Wild Pokemon defeated!");
+                }
+                else
+                {
+                    yield return dialog.TypeDialog("Hurray!! You won!");
+                }
+            
                 // Time to Exp Gain
                 yield return new WaitForSeconds(1f);
 
@@ -219,7 +243,6 @@ public class BattleSystem : MonoBehaviour
             CheckForBattleOver(targetUnit);
         }
     }
-
 
     // Checks whose pokemon fainted
     void CheckForBattleOver(PlayerPk faintedUnit)
@@ -430,6 +453,7 @@ public class BattleSystem : MonoBehaviour
     // Switching to another pokemon in player party
     IEnumerator SwitchPokemon(Pokemon newPokemon)
     {
+        
         yield return dialog.TypeDialog($"{playerPk.Pokemon.Base.Name}, that's enough!");
         playerPk.PlayFaintAnimation();
         yield return new WaitForSeconds(2f);
@@ -455,6 +479,16 @@ public class BattleSystem : MonoBehaviour
     IEnumerator TryToEscape()
     {
         state = BattleState.Busy;
+        if (isTrainerBattle)
+        {
+            yield return dialog.TypeDialog("Cannot run from here!");
+            state = BattleState.PerformMove;
+            //BattleOver(false);
+            //yield break;
+            //StartCoroutine(PlayerMove());
+            yield return PlayerMove();
+        }
+
         ++escapeAttempts;
         int playerSpeed = playerPk.Pokemon.Speed;
         int enemySpeed = EnemyPk.Pokemon.Speed;
@@ -478,8 +512,12 @@ public class BattleSystem : MonoBehaviour
             {
                 yield return dialog.TypeDialog($"Can't escape!");
                 state = BattleState.PerformMove;
-                BattleOver(false);
+                //BattleOver(false);
+                //yield break;
+                yield return PlayerMove();
             }
         }
+
+
     }
 }

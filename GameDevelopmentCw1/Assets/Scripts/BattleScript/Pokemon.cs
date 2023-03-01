@@ -114,20 +114,29 @@ public class Pokemon
     public Moves RandomMove(int HP)
     {
         int currentHP = HP;
-        int r = 0;
-        if (currentHP >= (MaxHP/0.25))
+        int r = Random.Range(0, Moves.Count);
+
+        if (currentHP > 0 && currentHP < MaxHP)
         {
-            r = Random.Range(0, Moves.Count);
+            if (currentHP >= (MaxHP / 0.25))
+            {
+                r = Random.Range(0, Moves.Count);
+                return Moves[r];
+            }
+            else if (currentHP >= (MaxHP / 0.5))
+            {
+                r = Random.Range(1, Moves.Count);
+                return Moves[r];
+            }
+            else if (currentHP >= (MaxHP / 0.66))
+            {
+                r = Random.Range(2, Moves.Count);
+                return Moves[r];
+            }
         }
-        else if (currentHP >= (MaxHP/0.5))
-        {
-            r = Random.Range(1, Moves.Count);
-        }
-        else if( currentHP >= (MaxHP/0.66))
-        {
-            r = Random.Range(2, Moves.Count);
-        }
-        return Moves[r];
+
+        return Moves[r]; 
+              
     }
 }
 

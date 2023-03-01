@@ -5,12 +5,12 @@ using UnityEngine;
 public class CharacterAnimator : MonoBehaviour
 {
 
-//Sprites for Animation
-[SerializeField] List<Sprite> wDownSprite;
-[SerializeField] List<Sprite> wUpSprite;
-[SerializeField] List<Sprite> wRightSprite;
-[SerializeField] List<Sprite> wLeftSprite;
-[SerializeField] FacingDirection defaultDirection = FacingDirection.Down;
+    //Sprites for Animation
+    [SerializeField] List<Sprite> wDownSprite;
+    [SerializeField] List<Sprite> wUpSprite;
+    [SerializeField] List<Sprite> wRightSprite;
+    [SerializeField] List<Sprite> wLeftSprite;
+    [SerializeField] FacingDirection defaultDirection = FacingDirection.Down;
 
     //Parameters for Moving
     public float MoveX {get; set;}
@@ -90,10 +90,4 @@ public class CharacterAnimator : MonoBehaviour
 
 }
 
-public enum FacingDirection
-{
-    Up,
-    Down, 
-    Left, 
-    Right
-}
+public enum FacingDirection { Up, Down, Left, Right }
