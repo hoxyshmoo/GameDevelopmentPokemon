@@ -11,6 +11,8 @@ public class TrainerController : MonoBehaviour, Interactable
     [SerializeField] Dialogue dialogAfterBattle;
     [SerializeField] GameObject fov;
 
+    //NpcScript move;
+
     // State
     bool battleLost = false;
 
@@ -19,11 +21,14 @@ public class TrainerController : MonoBehaviour, Interactable
     private void Awake()
     {
         character = GetComponent<Character>();
+       // List<Vector2> move= GetComponent<NpcScript>();
     }
 
     private void Start()
     {
+        //SetFOVRotation(move.MovePattern);
         SetFOVRotation(character.Animator.DefaultDirection);
+        //Debug.Log("MovePattern: " + move.MovePattern);
     }
 
     public void Interact(Transform initiator)
@@ -70,16 +75,19 @@ public class TrainerController : MonoBehaviour, Interactable
     public void SetFOVRotation(FacingDirection dir)
     {
         float angle = 0f;
+
         if (dir == FacingDirection.Right)
             angle = 90f;
-        else if (dir == FacingDirection.Left)
+        else if (dir == FacingDirection.Up)
             angle = 180f;
-        else if (dir == FacingDirection.Down)
+        else if (dir == FacingDirection.Left)
             angle = 270f;
 
+        //Setting Z axis value to FOC of Boss
         fov.transform.eulerAngles = new Vector3(0f, 0f, angle);
-    }    
-    
+    }
+
+
     //Battle lost
     public void BattleLost()
     {

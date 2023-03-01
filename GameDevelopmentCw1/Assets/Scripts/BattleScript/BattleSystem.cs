@@ -486,7 +486,7 @@ public class BattleSystem : MonoBehaviour
             //BattleOver(false);
             //yield break;
             //StartCoroutine(PlayerMove());
-            yield return PlayerMove();
+            yield return EnemyMove();
         }
 
         ++escapeAttempts;
@@ -514,7 +514,7 @@ public class BattleSystem : MonoBehaviour
                 state = BattleState.PerformMove;
                 //BattleOver(false);
                 //yield break;
-                yield return PlayerMove();
+                yield return EnemyMove();
             }
         }
 

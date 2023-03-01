@@ -9,6 +9,9 @@ public class NpcScript : MonoBehaviour, Interactable
 [SerializeField] List<Vector2> movePattern;
 [SerializeField] float timeBetweenMovePattern;
 
+    public List<Vector2> MovePattern { get { return movePattern; } }
+
+
 NPCState state;
 float idleTimer;
 int currentMovePattern=0;
