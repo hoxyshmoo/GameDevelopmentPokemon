@@ -5,11 +5,12 @@ using UnityEngine;
 public class NpcScript : MonoBehaviour, Interactable
 {
 
-[SerializeField] Dialogue dialogue;
-[SerializeField] List<Vector2> movePattern;
-[SerializeField] float timeBetweenMovePattern;
+//Serialized field to be set by programmer 
+[SerializeField] Dialogue dialogue; //takes in dialogue actions
+[SerializeField] List<Vector2> movePattern; //maps out npc movement 
+[SerializeField] float timeBetweenMovePattern; //maps the time between movements
 
-    public List<Vector2> MovePattern { get { return movePattern; } }
+    public List<Vector2> MovePattern { get { return movePattern; } } //expose move pattern to be accesed by other scripts
 
 
 NPCState state;
@@ -33,17 +34,20 @@ int currentMovePattern=0;
 Character character;
 
 private void Awake(){
+    //get character component
     character=GetComponent<Character>();
 }
 
+    //interaction feature for interacting with objects in the interactable layer 
     public void Interact(Transform initiator){
         //Debug.Log("Test Interaction");
+        //check if npc state is in idle form before interacting
         if(state==NPCState.Idle){
             state=NPCState.Dialogue;
-            character.LookAttention(initiator.position);
+            character.LookAttention(initiator.position); //make the npc look at the initiator when trying to start a dialogue
    StartCoroutine(DialogueManager.Instance.ShowDialogue(dialogue,()=>{
     idleTimer=0f;
-    state=NPCState.Idle;
+    state=NPCState.Idle; //set state of npc to idle
    }));
         }
      
@@ -56,6 +60,7 @@ private void Awake(){
         //     return;
         // }
 
+        //start npc movement is npc is in idle state and there is a given move pattern
         if(state==NPCState.Idle){
             idleTimer+=Time.deltaTime;
             if(idleTimer>timeBetweenMovePattern){
@@ -69,6 +74,7 @@ private void Awake(){
         character.HandleUpdate();
     }
 
+    //Walk function that iterates through the movement patterns and repeats when given pattern has finished 
     IEnumerator Walk(){
         state=NPCState.Walking;
         var oldPosition = transform.position;
@@ -84,4 +90,5 @@ private void Awake(){
     }
 }
 
+//enum to track state of npc 
 public enum NPCState{Idle,Walking,Dialogue}

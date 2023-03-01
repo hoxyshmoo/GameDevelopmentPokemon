@@ -5,7 +5,7 @@ using UnityEngine;
 
     public class PlayerController : MonoBehaviour
     {
-    // variables
+    // variables for the player controller
     [SerializeField] new string name;
     [SerializeField] Sprite sprite;
 
@@ -26,6 +26,7 @@ using UnityEngine;
        character=GetComponent<Character>();
     }
 
+    //get user input and assign it to variables
     public void HandleUpdate(){
         if(!character.IsMoving){
 input.x=Input.GetAxisRaw("Horizontal");
@@ -65,7 +66,7 @@ StartCoroutine(character.Move(input,OnMoveOver));
     }
     }
 
-    
+    //Interact function
     void Interact(){
         //var DirectionFacing = new Vector3(animator.GetFloat("moveX"),animator.GetFloat("moveY")); Original Unity Animator
         var DirectionFacing = new Vector3(character.Animator.MoveX,character.Animator.MoveY); //New Unity Animator
@@ -73,15 +74,16 @@ StartCoroutine(character.Move(input,OnMoveOver));
 
         //Debug.DrawLine(transform.position,interacPosition,Color.green,0.5f); //Test Direction Facing
 
-       var collider= Physics2D.OverlapCircle(interacPosition,0.3f,GameLayers.i.InteractableLayer);
+       var collider= Physics2D.OverlapCircle(interacPosition,0.3f,GameLayers.i.InteractableLayer); //check if the collider is touching a game interactable layer object
        if(collider!=null){ //check if collider is null or interactable
         collider.GetComponent<Interactable>()?.Interact(transform);
        }
     }
 
+    //check if trainer in view using collision circle
     private void CheckIfInTrainersView()
     {
-        var collider = Physics2D.OverlapCircle(transform.position, 0.2f, GameLayers.i.FovLayer);
+        var collider = Physics2D.OverlapCircle(transform.position, 0.2f, GameLayers.i.FovLayer); //check if trainer is in fov layer
 
 
         if (collider != null )
@@ -115,6 +117,7 @@ StartCoroutine(character.Move(input,OnMoveOver));
     //  return true;
     // }
 
+
     private void OnMoveOver(){
         var colliders = Physics2D.OverlapCircleAll(transform.position-new Vector3(0,character.OffsetY),0.2f,GameLayers.i.TriggerableLayer);         
   
@@ -130,6 +133,7 @@ StartCoroutine(character.Move(input,OnMoveOver));
         CheckIfInTrainersView();
     }
 
+//expose variables for easy access
     public string Name
     {
         get => name;

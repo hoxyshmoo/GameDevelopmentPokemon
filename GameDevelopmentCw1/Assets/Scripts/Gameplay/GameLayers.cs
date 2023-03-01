@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameLayers : MonoBehaviour
 {
+    //Puts all the layer types in 1 class for easy access
     [SerializeField] public LayerMask SolidObjectsLayer; 
     [SerializeField] public LayerMask grassEncounterLayer; 
     [SerializeField] public LayerMask interactableLayer; 
@@ -11,12 +12,14 @@ public class GameLayers : MonoBehaviour
     [SerializeField] public LayerMask portalLayer; 
     [SerializeField] public LayerMask fovLayer; 
 
+    //Expose layer object for easy access
     public static GameLayers i {get; set;}
 
     private void Awake(){
     i=this;
     }
 
+    //get method for each type of layer
     public LayerMask SolidLayer{
         get => SolidObjectsLayer;
  
